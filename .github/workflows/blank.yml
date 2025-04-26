@@ -1,4 +1,4 @@
-name: Deploy Simple EC2 with CloudFormation
+name: Deploy Application
 
 on:
   workflow_dispatch:
@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      STACK_NAME: simple-ec2-stack
-      TEMPLATE_FILE: simple-ec2.yml
-      # REGION: us-east-1
+      EC2_TAG_NAME: testing
+      EC2_USER: ubuntu
+      SSH_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
     steps:
       - name: Checkout repository
