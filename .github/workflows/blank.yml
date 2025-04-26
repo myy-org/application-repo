@@ -1,7 +1,9 @@
-name: Deploy Application
+name: Deploy Application 
 
 on:
   workflow_dispatch:
+  push:
+   branches: [ "main" ]
 
 jobs:
   deploy:
