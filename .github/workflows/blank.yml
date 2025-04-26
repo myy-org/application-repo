@@ -37,7 +37,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: myy-org/Eps-infra
+          repository: myy-org/Eps-infra/.github/workflows/blank.yml
           event-type: deploy-infra
 
       - name: Wait for EC2 (Only if created)
