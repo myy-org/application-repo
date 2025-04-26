@@ -1,20 +1,23 @@
-name: Deploy Application
+name: Deploy Simple EC2 with CloudFormation
 
 on:
   workflow_dispatch:
+ # push:
+   # branches:
+  #    - main
+ 
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     env:
-      EC2_TAG_NAME: testing
-      EC2_USER: ubuntu
-      SSH_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-      REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      STACK_NAME: simple-ec2-stack
+      TEMPLATE_FILE: simple-ec2.yml
+      # REGION: us-east-1
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Configure AWS credentials
