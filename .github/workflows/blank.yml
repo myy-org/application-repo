@@ -34,5 +34,13 @@ jobs:
           
           # Set output properly
           echo "instance_id=${instance_id}" >> $GITHUB_ENV
+
+      - name: Trigger Infra Repo if EC2 Not Found
+        if: env.instance_id == ''
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: myy-org/Eps-infra
+          event-type: deploy-infra
           
       
