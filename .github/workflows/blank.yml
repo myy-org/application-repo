@@ -22,7 +22,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          
+
       - name: Check EC2 Instance
         id: check
         run: |
@@ -30,38 +30,9 @@ jobs:
             --filters "Name=tag:Name,Values=$EC2_TAG_NAME" "Name=instance-state-name,Values=running" \
             --query "Reservations[].Instances[].InstanceId" --output text)
 
-          echo "instance_id=$instance_id" >> $GITHUB_OUTPUT
-
-      - name: Trigger Infra Repo if EC2 Not Found
-        if: steps.check.outputs.instance_id == ''
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: myy-org/Eps-infra/.github/workflows/blank.yml
-          event-type: deploy-infra
-
-      - name: Wait for EC2 (Only if created)
-        if: steps.check.outputs.instance_id == ''
-        run: sleep 120
-
-      - name: Get EC2 Public IP
-        id: getip
-        run: |
-          ec2_ip=$(aws ec2 describe-instances \
-            --filters "Name=tag:Name,Values=$EC2_TAG_NAME" "Name=instance-state-name,Values=running" \
-            --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
-          echo "ec2_ip=$ec2_ip" >> $GITHUB_OUTPUT
-
-      - name: Add SSH Key
-        run: |
-          echo "$SSH_KEY" > key.pem
-          chmod 400 key.pem
-
-      - name: Deploy NGINX to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@${{ steps.getip.outputs.ec2_ip }} << 'EOF'
-            sudo apt update -y
-            sudo apt install docker.io -y
-            sudo systemctl start docker
-            sudo docker run -d -p 80:80 nginx
-          EOF
+          echo "instance_id=$instance_id"
+          
+          # Set output properly
+          echo "instance_id=${instance_id}" >> $GITHUB_ENV
+          
+      
