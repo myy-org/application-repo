@@ -37,7 +37,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: your-org/infra-repo
+          repository: myy-org/Eps-infra
           event-type: deploy-infra
 
       - name: Wait for EC2 (Only if created)
