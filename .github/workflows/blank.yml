@@ -11,7 +11,7 @@ jobs:
         EC2_USER: ubuntu
         SSH_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-        key.pem: virgina
+        PEM_FILE_NAME: virgina
 
     steps:
       - name: Checkout repository
@@ -55,12 +55,12 @@ jobs:
 
       - name: Add SSH Key
         run: |
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > $key.pem
-          chmod 400 $key.pem
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > $PEM_FILE_NAME
+          chmod 400 $PEM_FILE_NAME
 
       - name: Deploy NGINX to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$ec2_ip << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i $PEM_FILE_NAME $EC2_USER@$ec2_ip << 'EOF'
             sudo apt update -y
             sudo apt install docker.io -y
             sudo systemctl start docker
