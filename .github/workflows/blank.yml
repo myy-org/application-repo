@@ -42,5 +42,28 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           repository: myy-org/Eps-infra
           event-type: deploy-infra
+
+      - name: Get EC2 Public IP
+        id: getip
+        run: |
+          ec2_ip=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=$EC2_TAG_NAME" "Name=instance-state-name,Values=running" \
+            --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+
+          echo "ec2_ip=${ec2_ip}" >> $GITHUB_ENV
+
+      - name: Add SSH Key
+        run: |
+          echo "$EC2_SSH_PRIVATE_KEY" > key.pem
+          chmod 400 key.pem
+
+      - name: Deploy NGINX to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$ec2_ip << 'EOF'
+            sudo apt update -y
+            sudo apt install docker.io -y
+            sudo systemctl start docker
+            sudo docker run -d -p 80:80 nginx
+          EOF
           
       
