@@ -11,6 +11,7 @@ jobs:
         EC2_USER: ubuntu
         SSH_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+        key.pem: virgina
 
     steps:
       - name: Checkout repository
@@ -54,8 +55,8 @@ jobs:
 
       - name: Add SSH Key
         run: |
-          echo "$EC2_SSH_PRIVATE_KEY" > key.pem
-          chmod 400 key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > $key.pem
+          chmod 400 $key.pem
 
       - name: Deploy NGINX to EC2
         run: |
