@@ -10,6 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production 
     env:
         EC2_TAG_NAME: testing
         EC2_USER: ubuntu
