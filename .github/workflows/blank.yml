@@ -3,7 +3,7 @@ name: Deploy Application
 on:
   workflow_dispatch:
   push:
-   branches: [ "main" ]
+   # branches: [ "main" ]
   repository_dispatch:
     types: [deploy-application]
 
@@ -68,7 +68,9 @@ jobs:
             sudo apt update -y
             sudo apt install docker.io -y
             sudo systemctl start docker
-            sudo docker run -d -p 80:80 nginx
+            sudo docker pull parthitk/ultimate-cicd:21
+            sudo docker run -d -p 8080:80 parthitk/ultimate-cicd:21
+            #sudo docker run -d -p 80:80 nginx
           EOF
           
       
